@@ -18,7 +18,7 @@ def main():
         long_polling_url = "https://dvmn.org/api/long_polling/"
 
         try:
-            response = requests.get(long_polling_url, headers=headers)
+            response = requests.get(long_polling_url, headers=headers, params=params)
             response.raise_for_status()
             json = response.json()
             lesson_title = response.json().get('new_attempts')[0].get('lesson_title')
@@ -29,8 +29,7 @@ def main():
                 bot.send_message(text=f'Урок /"{lesson_title}/" сдан!',
                                  chat_id=chat_id)
             elif json.get('status') == 'timeout':
-                params = {"timestamp": response.json().get('timestamp_to_request')}
-                response = requests.get(long_polling_url, headers=headers, params=params)
+                params = {"timestamp": json.get('timestamp_to_request')}
                 continue
         except ReadTimeout:
             continue
