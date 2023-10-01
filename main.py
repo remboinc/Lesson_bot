@@ -20,14 +20,15 @@ def main():
         try:
             response = requests.get(long_polling_url, headers=headers)
             response.raise_for_status()
+            json = response.json()
             lesson_title = response.json().get('new_attempts')[0].get('lesson_title')
-            if response.json().get('new_attempts')[0].get('is_negative') is True:
+            if json.get('new_attempts')[0].get('is_negative') is True:
                 bot.send_message(text=f'Преподаватель проверил работу "{lesson_title}"\n\nЕсть над чем поработать',
                                  chat_id=chat_id)
-            elif response.json().get('new_attempts')[0].get('is_negative') is False:
+            elif json.get('new_attempts')[0].get('is_negative') is False:
                 bot.send_message(text=f'Урок /"{lesson_title}/" сдан!',
                                  chat_id=chat_id)
-            elif response.json().get('status') == 'timeout':
+            elif json.get('status') == 'timeout':
                 params = {"timestamp": response.json().get('timestamp_to_request')}
                 response = requests.get(long_polling_url, headers=headers, params=params)
                 continue
