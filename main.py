@@ -19,6 +19,7 @@ def main():
 
         try:
             response = requests.get(long_polling_url, headers=headers)
+            response.raise_for_status()
             lesson_title = response.json().get('new_attempts')[0].get('lesson_title')
             if response.json().get('new_attempts')[0].get('is_negative') is True:
                 bot.send_message(text=f'Преподаватель проверил работу "{lesson_title}"\n\nЕсть над чем поработать',
