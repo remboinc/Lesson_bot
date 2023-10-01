@@ -10,10 +10,11 @@ def main():
     load_dotenv()
     chat_id = os.getenv('TG_CHAT_ID')
     telegram_bot_token = os.getenv('TELEGRAM_BOT_TOKEN')
+    dvmn_token = os.getenv('DVMN_TOKEN')
     bot = telegram.Bot(token=telegram_bot_token)
 
     while True:
-        headers = {"Authorization": "Token f6a7577dd1560d83e9ebc0c5341c7f11fc0793ca"}
+        headers = {"Authorization": dvmn_token}
         long_polling_url = "https://dvmn.org/api/long_polling/"
 
         try:
