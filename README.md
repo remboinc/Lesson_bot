@@ -17,7 +17,7 @@ pip install -r requirements.txt
 
 ```sh
 TELEGRAM_BOT_TOKEN='21234567:роиоОРПпоро7пгороyDIH8FcoNLGGdF4twQ'
-CHAT_ID=123456789
+TG_CHAT_ID=123456789
 ```
 Запустите скрипт
 ```sh
