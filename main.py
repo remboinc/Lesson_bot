@@ -20,16 +20,16 @@ def main():
         try:
             response = requests.get(long_polling_url, headers=headers, params=params)
             response.raise_for_status()
-            json = response.json()
-            lesson_title = response.json().get('new_attempts')[0].get('lesson_title')
-            if json.get('new_attempts')[0].get('is_negative'):
+            response_from_dvmn = response.json()
+            lesson_title = response_from_dvmn.get('new_attempts')[0].get('lesson_title')
+            if response_from_dvmn.get('new_attempts')[0].get('is_negative'):
                 bot.send_message(text=f'Преподаватель проверил работу "{lesson_title}"\n\nЕсть над чем поработать',
                                  chat_id=chat_id)
-            elif not json.get('new_attempts')[0].get('is_negative'):
+            elif not response_from_dvmn.get('new_attempts')[0].get('is_negative'):
                 bot.send_message(text=f'Урок /"{lesson_title}/" сдан!',
                                  chat_id=chat_id)
-            elif json.get('status') == 'timeout':
-                params = {"timestamp": json.get('timestamp_to_request')}
+            elif response_from_dvmn.get('status') == 'timeout':
+                params = {"timestamp": response_from_dvmn.get('timestamp_to_request')}
                 continue
         except ReadTimeout:
             continue
