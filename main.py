@@ -10,26 +10,26 @@ def main():
     load_dotenv()
     chat_id = os.getenv('TG_CHAT_ID')
     telegram_bot_token = os.getenv('TELEGRAM_BOT_TOKEN')
-    dvmn_token = os.getenv('DVMN_TOKEN')
+    dvmn_api_token = os.getenv('DVMN_TOKEN')
     bot = telegram.Bot(token=telegram_bot_token)
 
     while True:
-        headers = {"Authorization": dvmn_token}
+        headers = {"Authorization": dvmn_api_token}
         long_polling_url = "https://dvmn.org/api/long_polling/"
 
         try:
             response = requests.get(long_polling_url, headers=headers, params=params)
             response.raise_for_status()
-            response_from_dvmn = response.json()
-            lesson_title = response_from_dvmn.get('new_attempts')[0].get('lesson_title')
-            if response_from_dvmn.get('new_attempts')[0].get('is_negative'):
+            response_from_api = response.json()
+            lesson_title = response_from_api.get('new_attempts')[0].get('lesson_title')
+            if response_from_api.get('new_attempts')[0].get('is_negative'):
                 bot.send_message(text=f'Преподаватель проверил работу "{lesson_title}"\n\nЕсть над чем поработать',
                                  chat_id=chat_id)
-            elif not response_from_dvmn.get('new_attempts')[0].get('is_negative'):
+            elif not response_from_api.get('new_attempts')[0].get('is_negative'):
                 bot.send_message(text=f'Урок /"{lesson_title}/" сдан!',
                                  chat_id=chat_id)
-            elif response_from_dvmn.get('status') == 'timeout':
-                params = {"timestamp": response_from_dvmn.get('timestamp_to_request')}
+            elif response_from_api.get('status') == 'timeout':
+                params = {"timestamp": response_from_api.get('timestamp_to_request')}
                 continue
         except ReadTimeout:
             continue
