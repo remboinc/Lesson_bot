@@ -28,7 +28,7 @@ def main():
             elif not lesson_check_results.get('new_attempts')[0].get('is_negative'):
                 bot.send_message(text=f'Урок /"{lesson_title}/" сдан!',
                                  chat_id=chat_id)
-            elif lesson_check_results.get('status') == 'timeout':
+            if lesson_check_results.get('status') == 'timeout':
                 params = {"timestamp": lesson_check_results.get('timestamp_to_request')}
                 continue
         except ReadTimeout:
