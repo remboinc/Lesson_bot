@@ -37,6 +37,10 @@ def main():
             time.sleep(1)
             print('ConnectionError, reload...')
             continue
+        except TimeoutError:
+            time.sleep(1)
+            print('TimeoutError, reload...')
+            continue
 
 
 if __name__ == '__main__':
