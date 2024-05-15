@@ -20,16 +20,16 @@ def main():
         try:
             response = requests.get(long_polling_url, headers=headers, params=params)
             response.raise_for_status()
-            response_from_api = response.json()
-            lesson_title = response_from_api.get('new_attempts')[0].get('lesson_title')
-            if response_from_api.get('new_attempts')[0].get('is_negative'):
+            lesson_check_results = response.json()
+            lesson_title = lesson_check_results.get('new_attempts')[0].get('lesson_title')
+            if lesson_check_results.get('new_attempts')[0].get('is_negative'):
                 bot.send_message(text=f'Преподаватель проверил работу "{lesson_title}"\n\nЕсть над чем поработать',
                                  chat_id=chat_id)
-            elif not response_from_api.get('new_attempts')[0].get('is_negative'):
+            elif not lesson_check_results.get('new_attempts')[0].get('is_negative'):
                 bot.send_message(text=f'Урок /"{lesson_title}/" сдан!',
                                  chat_id=chat_id)
-            elif response_from_api.get('status') == 'timeout':
-                params = {"timestamp": response_from_api.get('timestamp_to_request')}
+            elif lesson_check_results.get('status') == 'timeout':
+                params = {"timestamp": lesson_check_results.get('timestamp_to_request')}
                 continue
         except ReadTimeout:
             continue
