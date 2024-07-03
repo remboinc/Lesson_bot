@@ -20,7 +20,10 @@ def main():
     bot = telegram.Bot(token=telegram_bot_token)
     params = {}
 
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s %(funcName)s %(lineno)d %(levelname)s %(message)s'
+    )
     logger = logging.getLogger()
     logger.addHandler(JournalHandler())
 
