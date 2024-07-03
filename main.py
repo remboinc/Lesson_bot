@@ -88,9 +88,11 @@ def main():
                             text=f'Урок "{lesson_title}" сдан!'
                         )
 
-            if lesson_check_results.get('status') == 'timeout':
+            if lesson_check_results.get('status') == 'found':
                 params = {"timestamp": lesson_check_results.get('timestamp_to_request')}
-                continue
+            else:
+                logger.info("Новых попыток нет или запрос не дошел до сервера DVMN, ожидание...")
+                time.sleep(10)  
 
         except ReadTimeout:
             logger.error("Произошла ошибка ReadTimeout, повтор запроса...")
