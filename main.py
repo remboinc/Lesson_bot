@@ -3,22 +3,28 @@ import time
 import requests
 import telegram
 import logging
+from logging import Handler, LogRecord
+from telegram.ext import Updater
 from systemd.journal import JournalHandler
 from requests.exceptions import ReadTimeout, ConnectionError
 from dotenv import load_dotenv
 
 
-class TelegramHandler(logging.Handler):
+class TelegramHandler(Handler):
     def __init__(self, token, chat_id):
         super().__init__()
         self.token = token
         self.chat_id = chat_id
-        self.base_url = f"https://api.telegram.org/bot{token}/sendMessage"
+        self.updater = Updater(token=self.token, use_context=True)
+        self.dispatcher = self.updater.dispatcher
 
-    def emit(self, record):
+    def emit(self, record: LogRecord):
         log_entry = self.format(record)
-        params = {"chat_id": self.chat_id, "text": log_entry}
-        requests.post(self.base_url, params=params)
+        self.dispatcher.bot.send_message(chat_id=self.chat_id, text=log_entry)
+
+    def close(self):
+        super().close()
+        self.updater.stop()
 
 
 def main():
