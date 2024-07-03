@@ -8,6 +8,19 @@ from requests.exceptions import ReadTimeout, ConnectionError
 from dotenv import load_dotenv
 
 
+class TelegramHandler(logging.Handler):
+    def __init__(self, token, chat_id):
+        super().__init__()
+        self.token = token
+        self.chat_id = chat_id
+        self.base_url = f"https://api.telegram.org/bot{token}/sendMessage"
+
+    def emit(self, record):
+        log_entry = self.format(record)
+        params = {"chat_id": self.chat_id, "text": log_entry}
+        requests.post(self.base_url, params=params)
+
+
 def main():
     load_dotenv()
     chat_id = os.getenv('TG_CHAT_ID')
