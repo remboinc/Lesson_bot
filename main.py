@@ -36,7 +36,16 @@ def main():
     if not all([chat_id, telegram_bot_token, dvmn_api_token]):
         raise ValueError("Не удалось загрузить одну или несколько переменных окружения.")
 
-    bot = telegram.Bot(token=telegram_bot_token)
+    try:
+        bot = telegram.Bot(token=telegram_bot_token)
+        bot.send_message(
+            chat_id=chat_id,
+            text="Тестовое сообщение для проверки работоспособности бота"
+        )
+        logging.info("Тестовое сообщение успешно отправлено в Telegram")
+    except Exception as e:
+        logging.error(f"Ошибка при отправке тестового сообщения в Telegram: {e}")
+
     params = {}
 
     logging.basicConfig(
