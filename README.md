@@ -13,11 +13,12 @@ git clone https://github.com/remboinc/Lesson_bot.git
 ```sh
 pip install -r requirements.txt
 ```
-Создайте файл ```.env```, вставьте в него свой chat_id и токен телеграм бота.
+Создайте файл ```.env```, вставьте в него свой chat_id, dvmn_token и токен телеграм бота.
 
 ```sh
 TELEGRAM_BOT_TOKEN='21234567:роиоОРПпоро7пгороyDIH8FcoNLGGdF4twQ'
 TG_CHAT_ID=123456789
+DVMN_TOKEN=r34hf38434h83fjruieiurhf834h74802djidji
 ```
 Запустите скрипт
 ```sh
