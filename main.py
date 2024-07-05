@@ -44,7 +44,8 @@ def main():
         )
         logging.info("Тестовое сообщение успешно отправлено в Telegram")
     except Exception as e:
-        logging.error(f"Ошибка при отправке тестового сообщения в Telegram: {e}")
+        logging.exception("Ошибка при отправке тестового сообщения в Telegram")
+        bot.send_message(chat_id=chat_id, text=f"Ошибка при отправке тестового сообщения:\n{e}")
 
     params = {}
 
@@ -92,7 +93,7 @@ def main():
                 params = {"timestamp": lesson_check_results.get('timestamp_to_request')}
             else:
                 logger.info("Новых попыток нет или запрос не дошел до сервера DVMN, ожидание...")
-                time.sleep(10)  
+                time.sleep(10)
 
         except ReadTimeout:
             logger.error("Произошла ошибка ReadTimeout, повтор запроса...")
@@ -106,7 +107,8 @@ def main():
             time.sleep(1)
             continue
         except Exception as e:
-            logger.error(f"Неожиданная ошибка: {e}")
+            logger.exception("Неожиданная ошибка")
+            bot.send_message(chat_id=chat_id, text=f"Неожиданная ошибка:\n{e}")
             time.sleep(1)
             continue
 
