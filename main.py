@@ -4,27 +4,26 @@ import requests
 import telegram
 import logging
 from logging import Handler, LogRecord
-from telegram.ext import Updater
 from systemd.journal import JournalHandler
 from requests.exceptions import ReadTimeout, ConnectionError
 from dotenv import load_dotenv
 
 
+logger = logging.getLogger(__name__)
+
+
 class TelegramHandler(Handler):
     def __init__(self, token, chat_id):
         super().__init__()
-        self.token = token
+        self.bot = telegram.Bot(token=token)
         self.chat_id = chat_id
-        self.updater = Updater(token=self.token, use_context=True)
-        self.dispatcher = self.updater.dispatcher
 
     def emit(self, record: LogRecord):
         log_entry = self.format(record)
-        self.dispatcher.bot.send_message(chat_id=self.chat_id, text=log_entry)
-
-    def close(self):
-        super().close()
-        self.updater.stop()
+        try:
+            self.bot.send_message(chat_id=self.chat_id, text=log_entry)
+        except Exception as e:
+            logging.error(f"Ошибка при отправке сообщения в Telegram: {e}")
 
 
 def main():
@@ -48,13 +47,6 @@ def main():
         bot.send_message(chat_id=chat_id, text=f"Ошибка при отправке тестового сообщения:\n{e}")
 
     params = {}
-
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s %(funcName)s %(lineno)d %(levelname)s %(message)s'
-    )
-    logger = logging.getLogger()
-    logger.addHandler(JournalHandler())
 
     while True:
         headers = {"Authorization": f"Token {dvmn_api_token}"}
@@ -114,4 +106,10 @@ def main():
 
 
 if __name__ == '__main__':
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s %(funcName)s %(lineno)d %(levelname)s %(message)s'
+    )
+    logger = logging.getLogger()
+    logger.addHandler(JournalHandler())
     main()
