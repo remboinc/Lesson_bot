@@ -31,9 +31,8 @@ def main():
         level=logging.INFO,
         format='%(asctime)s %(funcName)s %(lineno)d %(levelname)s %(message)s'
     )
-    logger = logging.getLogger()
     logger.addHandler(JournalHandler())
-    
+
     load_dotenv()
     chat_id = os.getenv('TG_CHAT_ID')
     telegram_bot_token = os.getenv('TELEGRAM_BOT_TOKEN')
